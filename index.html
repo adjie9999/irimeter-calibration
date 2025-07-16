@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIMETER-2 - Sistem Manajemen Kalibrasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #4f46e5;
+            color: white;
+            padding: 32px 24px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: white;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .promo-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .promo-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .promo-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .promo-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s ease;
+        }
+
+        .promo-btn:hover {
+            background: #059669;
+        }
+
+        .content {
+            flex: 1;
+            padding: 32px;
+            max-width: calc(100vw - 280px);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .metric-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            border-color: #cbd5e1;
+            color: #475569;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            border-color: #4338ca;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #374151;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #374151;
+            background: white;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .table td {
+            color: #64748b;
+        }
+
+        .table tr:hover {
+            background: #f8fafc;
+        }
+
+        .info-box {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-left: 4px solid #0369a1;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .info-box h4 {
+            color: #0369a1;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .info-box p {
+            color: #0f172a;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .warning-box {
+            background: #fffbeb;
+            border: 1px solid #fed7aa;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .warning-box h4 {
+            color: #92400e;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .warning-box p {
+            color: #78350f;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            background: #4f46e5;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .tabs {
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .tab-list {
+            display: flex;
+            gap: 0;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            color: #64748b;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-button:hover {
+            color: #374151;
+        }
+
+        .tab-button.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .content {
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="logo">IRIMETER-2</div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="showPage('kalibrasi')">Kalibrasi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showPage('validasi')">Validasi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showPage('laporan')">Laporan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showPage('pengaturan')">Pengaturan</a>
+                </li>
+            </ul>
+
+            <div class="promo-section">
+                <div class="promo-title">Panduan Lengkap</div>
+                <div class="promo-subtitle">Dokumentasi kalibrasi dan troubleshooting</div>
+                <button class="promo-btn" onclick="showPage('panduan')">Lihat Panduan</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Page Kalibrasi -->
+            <div id="kalibrasi" class="page active">
+                <div class="header">
+                    <h1>Kalkulator Kalibrasi</h1>
+                    <p>Sistem perhitungan dan panduan input nilai A dan B untuk sensor kanan dan kiri</p>
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <button class="btn" onclick="resetCalibrationData()">Reset Data</button>
+                        <button class="btn btn-primary" onclick="exportCalibrationResults()">Export Hasil</button>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+                    <h3 style="color: #1e293b; font-size: 1rem; font-weight: 600; margin-bottom: 16px;">Standar SNI yang Harus Dipenuhi</h3>
+                    <div class="grid grid-3">
+                        <div style="text-align: center;">
+                            <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 4px;">Gradien (A)</div>
+                            <div style="font-size: 1.25rem; font-weight: 600; color: #1e293b; font-family: monospace;">0.95 - 1.05</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 4px;">Intersep (B)</div>
+                            <div style="font-size: 1.25rem; font-weight: 600; color: #1e293b; font-family: monospace;">-0.25 - 0.25</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 4px;">Korelasi (R²)</div>
+                            <div style="font-size: 1.25rem; font-weight: 600; color: #1e293b; font-family: monospace;">≥ 0.95</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-bottom: 32px;">
+                    <h4>Panduan Input Data</h4>
+                    <p><strong>Data Hasil Analisis Regresi:</strong> Masukkan hasil analisis regresi linier antara data IRIMETER-2 dengan alat referensi (y = Ax + B)<br>
+                    <strong>Pengaturan Kalibrasi Saat Ini:</strong> Masukkan nilai A dan B yang sedang aktif/tersimpan di dalam alat IRIMETER-2<br>
+                    <strong>Sumber Data:</strong> Data dapat diperoleh dari software analisis statistik (Excel, SPSS, R, Python) setelah melakukan uji korelasi</p>
+                </div>
+
+                <div class="grid grid-2" style="margin-bottom: 32px;">
+                    <!-- Sensor Kiri -->
+                    <div class="card">
+                        <div style="display: flex; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+                            <div style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444; margin-right: 12px;"></div>
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: #1e293b; margin: 0;">Sensor Kiri</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 24px;">
+                            <div style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em;">Data Hasil Analisis Regresi</div>
+                            <div class="grid grid-3" style="gap: 12px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">Gradien (A)</label>
+                                    <input type="number" id="gradien_left" class="form-input" placeholder="Nilai gradien dari persamaan regresi y=Ax+B" step="0.0001">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">Intersep (B)</label>
+                                    <input type="number" id="intersep_left" class="form-input" placeholder="Nilai intersep dari persamaan regresi y=Ax+B" step="0.0001">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">R² Value</label>
+                                    <input type="number" id="r_left" class="form-input" placeholder="Nilai koefisien determinasi R² (0-1)" step="0.0001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 24px;">
+                            <div style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em;">Pengaturan Kalibrasi Saat Ini</div>
+                            <div class="grid grid-2" style="gap: 12px;">
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">A Current</label>
+                                    <input type="number" id="a_old_left" class="form-input" placeholder="Nilai A yang saat ini tersimpan di alat" step="0.001">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">B Current</label>
+                                    <input type="number" id="b_old_left" class="form-input" placeholder="Nilai B yang saat ini tersimpan di alat" step="0.001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%;" onclick="calculateCalibration()">Hitung Kalibrasi</button>
+                    </div>
+
+                    <!-- Sensor Kanan -->
+                    <div class="card">
+                        <div style="display: flex; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+                            <div style="width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; margin-right: 12px;"></div>
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: #1e293b; margin: 0;">Sensor Kanan</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 24px;">
+                            <div style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em;">Data Hasil Analisis Regresi</div>
+                            <div class="grid grid-3" style="gap: 12px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">Gradien (A)</label>
+                                    <input type="number" id="gradien_right" class="form-input" placeholder="Nilai gradien dari persamaan regresi y=Ax+B" step="0.0001">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">Intersep (B)</label>
+                                    <input type="number" id="intersep_right" class="form-input" placeholder="Nilai intersep dari persamaan regresi y=Ax+B" step="0.0001">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">R² Value</label>
+                                    <input type="number" id="r_right" class="form-input" placeholder="Nilai koefisien determinasi R² (0-1)" step="0.0001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 24px;">
+                            <div style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em;">Pengaturan Kalibrasi Saat Ini</div>
+                            <div class="grid grid-2" style="gap: 12px;">
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">A Current</label>
+                                    <input type="number" id="a_old_right" class="form-input" placeholder="Nilai A yang saat ini tersimpan di alat" step="0.001">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 6px;">B Current</label>
+                                    <input type="number" id="b_old_right" class="form-input" placeholder="Nilai B yang saat ini tersimpan di alat" step="0.001">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Improvement Guide (Hidden by default) -->
+                <div id="improvement-guide" class="warning-box" style="display: none; margin-bottom: 32px;">
+                    <h4>Panduan Perbaikan untuk Memenuhi Standar SNI</h4>
+                    <div style="margin: 16px 0;">
+                        <h5 style="color: #92400e; margin-bottom: 12px;">Jika R² < 0.95 (Korelasi Kurang):</h5>
+                        <ul style="margin: 0 0 16px 20px; color: #78350f; font-size: 0.875rem;">
+                            <li><strong>Periksa sinkronisasi data:</strong> Pastikan data IRIMETER-2 dan referensi diambil pada jarak yang sama persis</li>
+                            <li><strong>Tingkatkan jumlah titik data:</strong> Gunakan lebih banyak segmen pengukuran (minimum 30 titik)</li>
+                            <li><strong>Periksa kondisi jalan:</strong> Gunakan variasi kondisi jalan yang representatif</li>
+                            <li><strong>Kalibrasi sensor:</strong> Pastikan sensor IRIMETER-2 berfungsi dengan baik</li>
+                            <li><strong>Kondisi lingkungan:</strong> Hindari pengukuran saat hujan atau kondisi ekstrem</li>
+                        </ul>
+                        <h5 style="color: #92400e; margin-bottom: 12px;">Jika Gradien/Intersep di Luar Batasan SNI:</h5>
+                        <ul style="margin: 0; color: #78350f; font-size: 0.875rem;">
+                            <li><strong>Periksa kalibrasi alat referensi:</strong> Pastikan alat referensi sudah terkalibrasi dengan benar</li>
+                            <li><strong>Periksa kecepatan pengukuran:</strong> Gunakan kecepatan yang konsisten sesuai standar</li>
+                            <li><strong>Periksa mounting sensor:</strong> Pastikan sensor terpasang dengan benar dan stabil</li>
+                            <li><strong>Ulangi pengukuran:</strong> Lakukan pengukuran ulang pada kondisi yang lebih baik</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Results Section (Hidden by default) -->
+                <div id="calibration-results" style="display: none;">
+                    <div class="card" style="margin-bottom: 32px;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin-bottom: 24px;">Hasil Kalibrasi dan Panduan Input</h3>
+                        
+                        <div class="grid grid-2">
+                            <!-- Sensor Kiri Results -->
+                            <div style="border: 1px solid #e2e8f0; border-left: 4px solid #ef4444; border-radius: 12px; overflow: hidden;">
+                                <div style="padding: 20px 24px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <div style="font-size: 1rem; font-weight: 600; color: #1e293b; display: flex; align-items: center;">
+                                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 8px;"></div>
+                                        Sensor Kiri
+                                    </div>
+                                </div>
+                                <div style="padding: 24px;" id="result-left-content">
+                                    <!-- Content akan diisi oleh JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Sensor Kanan Results -->
+                            <div style="border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; border-radius: 12px; overflow: hidden;">
+                                <div style="padding: 20px 24px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <div style="font-size: 1rem; font-weight: 600; color: #1e293b; display: flex; align-items: center;">
+                                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; margin-right: 8px;"></div>
+                                        Sensor Kanan
+                                    </div>
+                                </div>
+                                <div style="padding: 24px;" id="result-right-content">
+                                    <!-- Content akan diisi oleh JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alternatif Strategi -->
+                    <div class="card">
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #1e293b; margin-bottom: 32px;">Alternatif Strategi Kalibrasi</h3>
+                        
+                        <h4 style="margin-bottom: 16px; color: #ef4444; font-weight: 600;">Sensor Kiri - Pilihan Alternatif</h4>
+                        <div class="grid grid-3" style="margin-bottom: 32px; gap: 16px;">
+                            <div style="border: 1px solid #e2e8f0; border-left: 3px solid #ef4444; border-radius: 8px; padding: 16px; background: #fafafa;">
+                                <div style="font-weight: 600; margin-bottom: 8px; font-size: 0.875rem; color: #374151;">Batas Bawah SNI</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 16px;">Target: a=0.95, b=-0.25</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">A input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="low_a_left">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">B input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="low_b_left">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="border: 1px solid #e2e8f0; border-left: 3px solid #ef4444; border-radius: 8px; padding: 16px; background: #fafafa;">
+                                <div style="font-weight: 600; margin-bottom: 8px; font-size: 0.875rem; color: #374151;">Nilai Tengah SNI</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 16px;" id="mid_target_left">Target: a=1.00, b=0.00</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">A input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="mid_a_left">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">B input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="mid_b_left">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="border: 1px solid #e2e8f0; border-left: 3px solid #ef4444; border-radius: 8px; padding: 16px; background: #fafafa;">
+                                <div style="font-weight: 600; margin-bottom: 8px; font-size: 0.875rem; color: #374151;">Batas Atas SNI</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 16px;">Target: a=1.05, b=0.25</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">A input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="high_a_left">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">B input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="high_b_left">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-bottom: 16px; color: #3b82f6; font-weight: 600;">Sensor Kanan - Pilihan Alternatif</h4>
+                        <div class="grid grid-3" style="gap: 16px;">
+                            <div style="border: 1px solid #e2e8f0; border-left: 3px solid #3b82f6; border-radius: 8px; padding: 16px; background: #fafafa;">
+                                <div style="font-weight: 600; margin-bottom: 8px; font-size: 0.875rem; color: #374151;">Batas Bawah SNI</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 16px;">Target: a=0.95, b=-0.25</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">A input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="low_a_right">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">B input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="low_b_right">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="border: 1px solid #e2e8f0; border-left: 3px solid #3b82f6; border-radius: 8px; padding: 16px; background: #fafafa;">
+                                <div style="font-weight: 600; margin-bottom: 8px; font-size: 0.875rem; color: #374151;">Nilai Tengah SNI</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 16px;" id="mid_target_right">Target: a=1.00, b=0.00</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">A input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="mid_a_right">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">B input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="mid_b_right">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="border: 1px solid #e2e8f0; border-left: 3px solid #3b82f6; border-radius: 8px; padding: 16px; background: #fafafa;">
+                                <div style="font-weight: 600; margin-bottom: 8px; font-size: 0.875rem; color: #374151;">Batas Atas SNI</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 16px;">Target: a=1.05, b=0.25</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">A input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="high_a_right">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px; background: white; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">B input</div>
+                                        <div style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;" id="high_b_right">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Validasi -->
+            <div id="validasi" class="page">
+                <div class="header">
+                    <h1>Validasi Kalibrasi</h1>
+                    <p>Verifikasi hasil kalibrasi dengan pengujian lapangan dan analisis data</p>
+                </div>
+
+                <div class="grid grid-3">
+                    <div class="metric-card">
+                        <div class="metric-value">98.5%</div>
+                        <div class="metric-label">Akurasi Sensor Kiri</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">97.8%</div>
+                        <div class="metric-label">Akurasi Sensor Kanan</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">0.97</div>
+                        <div class="metric-label">Korelasi R²</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Uji Validasi Terbaru</div>
+                    
+                    <div class="tabs">
+                        <div class="tab-list">
+                            <button class="tab-button active" onclick="showTab('validasi', 'field-test')">Uji Lapangan</button>
+                            <button class="tab-button" onclick="showTab('validasi', 'correlation')">Analisis Korelasi</button>
+                            <button class="tab-button" onclick="showTab('validasi', 'history')">Riwayat Validasi</button>
+                        </div>
+                    </div>
+
+                    <div id="validasi-field-test" class="tab-content active">
+                        <div class="grid grid-2">
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Input Data Lapangan</h4>
+                                <div class="form-group">
+                                    <label class="form-label">Lokasi Pengujian</label>
+                                    <input type="text" class="form-input" placeholder="Nama jalan atau ruas yang diuji">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tanggal Pengujian</label>
+                                    <input type="date" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Jumlah Titik Pengukuran</label>
+                                    <input type="number" class="form-input" placeholder="Minimal 30 titik">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Upload Data IRIMETER-2</label>
+                                    <input type="file" class="form-input" accept=".csv,.xlsx">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Upload Data Referensi</label>
+                                    <input type="file" class="form-input" accept=".csv,.xlsx">
+                                </div>
+                                <button class="btn btn-primary">Mulai Validasi</button>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Status Validasi</h4>
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <span>Progress Analisis</span>
+                                        <span class="status-badge status-warning">Menunggu Data</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="warning-box">
+                                    <h4>Persyaratan Validasi</h4>
+                                    <p>• Minimum 30 titik pengukuran<br>
+                                    • Data IRIMETER-2 dan referensi harus sinkron<br>
+                                    • Kondisi cuaca yang sama saat pengukuran<br>
+                                    • Kecepatan pengukuran konsisten</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="validasi-correlation" class="tab-content">
+                        <h4 style="margin-bottom: 16px;">Analisis Korelasi Sensor</h4>
+                        <div class="grid grid-2">
+                            <div class="metric-card">
+                                <div class="metric-value">0.976</div>
+                                <div class="metric-label">R² Sensor Kiri</div>
+                                <span class="status-badge status-success">Memenuhi SNI</span>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">0.968</div>
+                                <div class="metric-label">R² Sensor Kanan</div>
+                                <span class="status-badge status-success">Memenuhi SNI</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 24px; padding: 20px; background: #f8fafc; border-radius: 8px;">
+                            <h5 style="margin-bottom: 12px;">Hasil Regresi Linear</h5>
+                            <p style="font-family: monospace; font-size: 0.9rem; margin: 4px 0;">Sensor Kiri: y = 0.987x + 0.034 (R² = 0.976)</p>
+                            <p style="font-family: monospace; font-size: 0.9rem; margin: 4px 0;">Sensor Kanan: y = 1.012x - 0.028 (R² = 0.968)</p>
+                        </div>
+                    </div>
+
+                    <div id="validasi-history" class="tab-content">
+                        <h4 style="margin-bottom: 16px;">Riwayat Validasi</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Lokasi</th>
+                                    <th>R² Kiri</th>
+                                    <th>R² Kanan</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-01-15</td>
+                                    <td>Jl. Sudirman Jakarta</td>
+                                    <td>0.976</td>
+                                    <td>0.968</td>
+                                    <td><span class="status-badge status-success">Valid</span></td>
+                                    <td><button class="btn">Lihat Detail</button></td>
+                                </tr>
+                                <tr>
+                                    <td>2024-01-10</td>
+                                    <td>Jl. Gatot Subroto</td>
+                                    <td>0.951</td>
+                                    <td>0.963</td>
+                                    <td><span class="status-badge status-success">Valid</span></td>
+                                    <td><button class="btn">Lihat Detail</button></td>
+                                </tr>
+                                <tr>
+                                    <td>2024-01-05</td>
+                                    <td>Jl. Thamrin Jakarta</td>
+                                    <td>0.943</td>
+                                    <td>0.938</td>
+                                    <td><span class="status-badge status-warning">Perlu Review</span></td>
+                                    <td><button class="btn">Lihat Detail</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Laporan -->
+            <div id="laporan" class="page">
+                <div class="header">
+                    <h1>Laporan dan Dokumentasi</h1>
+                    <p>Generate laporan kalibrasi, validasi, dan dokumentasi teknis</p>
+                </div>
+
+                <div class="grid grid-4">
+                    <div class="metric-card">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Laporan Bulan Ini</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">156</div>
+                        <div class="metric-label">Total Laporan</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">98%</div>
+                        <div class="metric-label">Tingkat Kepatuhan</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">3</div>
+                        <div class="metric-label">Laporan Pending</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Generator Laporan</div>
+                    
+                    <div class="grid grid-2">
+                        <div>
+                            <h4 style="margin-bottom: 16px;">Buat Laporan Baru</h4>
+                            <div class="form-group">
+                                <label class="form-label">Jenis Laporan</label>
+                                <select class="form-select">
+                                    <option>Laporan Kalibrasi</option>
+                                    <option>Laporan Validasi</option>
+                                    <option>Laporan Pemeliharaan</option>
+                                    <option>Laporan Audit Internal</option>
+                                    <option>Laporan Compliance SNI</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Periode Laporan</label>
+                                <div class="grid grid-2">
+                                    <input type="date" class="form-input" placeholder="Tanggal Mulai">
+                                    <input type="date" class="form-input" placeholder="Tanggal Selesai">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Unit/Alat</label>
+                                <select class="form-select">
+                                    <option>Semua IRIMETER-2</option>
+                                    <option>IRIMETER-2 Unit 001</option>
+                                    <option>IRIMETER-2 Unit 002</option>
+                                    <option>IRIMETER-2 Unit 003</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Format Output</label>
+                                <select class="form-select">
+                                    <option>PDF (Recommended)</option>
+                                    <option>Excel (XLSX)</option>
+                                    <option>Word (DOCX)</option>
+                                    <option>CSV Data</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Template</label>
+                                <select class="form-select">
+                                    <option>Template Standar</option>
+                                    <option>Template Audit</option>
+                                    <option>Template Compliance</option>
+                                    <option>Template Custom</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary">Generate Laporan</button>
+                        </div>
+                        
+                        <div>
+                            <h4 style="margin-bottom: 16px;">Quick Reports</h4>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <button class="btn">Laporan Kalibrasi Harian</button>
+                                <button class="btn">Laporan Validasi Mingguan</button>
+                                <button class="btn">Summary Bulanan</button>
+                                <button class="btn">Laporan Compliance SNI</button>
+                                <button class="btn">Export Data Lengkap</button>
+                            </div>
+                            
+                            <div class="info-box" style="margin-top: 24px;">
+                                <h4>Template Laporan</h4>
+                                <p>• Laporan mencakup data kalibrasi, validasi, dan compliance<br>
+                                • Grafik dan chart otomatis digenerate<br>
+                                • Digital signature dan metadata<br>
+                                • Sesuai standar ISO 17025</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Riwayat Laporan</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Jenis Laporan</th>
+                                <th>Periode</th>
+                                <th>Format</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-01-15 14:30</td>
+                                <td>Laporan Kalibrasi</td>
+                                <td>Jan 2024</td>
+                                <td>PDF</td>
+                                <td><span class="status-badge status-success">Selesai</span></td>
+                                <td>
+                                    <button class="btn">Download</button>
+                                    <button class="btn">Kirim Email</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-14 09:15</td>
+                                <td>Laporan Validasi</td>
+                                <td>Des 2023</td>
+                                <td>Excel</td>
+                                <td><span class="status-badge status-success">Selesai</span></td>
+                                <td>
+                                    <button class="btn">Download</button>
+                                    <button class="btn">Kirim Email</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-13 16:45</td>
+                                <td>Compliance SNI</td>
+                                <td>Q4 2023</td>
+                                <td>PDF</td>
+                                <td><span class="status-badge status-warning">Processing</span></td>
+                                <td>
+                                    <button class="btn">Cancel</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Page Pengaturan -->
+            <div id="pengaturan" class="page">
+                <div class="header">
+                    <h1>Pengaturan Sistem</h1>
+                    <p>Konfigurasi alat, user management, dan preferensi sistem</p>
+                </div>
+
+                <div class="card">
+                    <div class="tabs">
+                        <div class="tab-list">
+                            <button class="tab-button active" onclick="showTab('pengaturan', 'device')">Manajemen Alat</button>
+                            <button class="tab-button" onclick="showTab('pengaturan', 'users')">User Management</button>
+                            <button class="tab-button" onclick="showTab('pengaturan', 'system')">Sistem</button>
+                            <button class="tab-button" onclick="showTab('pengaturan', 'backup')">Backup & Restore</button>
+                        </div>
+                    </div>
+
+                    <div id="pengaturan-device" class="tab-content active">
+                        <div class="card-title">Manajemen IRIMETER-2</div>
+                        
+                        <div class="grid grid-2">
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Daftar Alat Terdaftar</h4>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Unit ID</th>
+                                            <th>Serial Number</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>IRI-001</td>
+                                            <td>2024-IRI-001-JKT</td>
+                                            <td><span class="status-badge status-success">Aktif</span></td>
+                                            <td><button class="btn">Edit</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>IRI-002</td>
+                                            <td>2024-IRI-002-BDG</td>
+                                            <td><span class="status-badge status-success">Aktif</span></td>
+                                            <td><button class="btn">Edit</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>IRI-003</td>
+                                            <td>2024-IRI-003-SBY</td>
+                                            <td><span class="status-badge status-warning">Maintenance</span></td>
+                                            <td><button class="btn">Edit</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button class="btn btn-primary" style="margin-top: 16px;">Tambah Alat Baru</button>
+                            </div>
+                            
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Konfigurasi Default</h4>
+                                <div class="form-group">
+                                    <label class="form-label">Interval Kalibrasi (bulan)</label>
+                                    <input type="number" class="form-input" value="12">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Batas Toleransi R²</label>
+                                    <input type="number" class="form-input" value="0.95" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Auto Backup Data</label>
+                                    <select class="form-select">
+                                        <option>Harian</option>
+                                        <option>Mingguan</option>
+                                        <option>Bulanan</option>
+                                        <option>Manual</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Notifikasi Email</label>
+                                    <select class="form-select">
+                                        <option>Aktif</option>
+                                        <option>Tidak Aktif</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-success">Simpan Pengaturan</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pengaturan-users" class="tab-content">
+                        <div class="card-title">User Management</div>
+                        
+                        <div class="grid grid-2">
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Daftar User</h4>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Admin System</td>
+                                            <td>admin@company.com</td>
+                                            <td>Administrator</td>
+                                            <td><span class="status-badge status-success">Aktif</span></td>
+                                            <td><button class="btn">Edit</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Teknisi A</td>
+                                            <td>teknisi1@company.com</td>
+                                            <td>Operator</td>
+                                            <td><span class="status-badge status-success">Aktif</span></td>
+                                            <td><button class="btn">Edit</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Supervisor</td>
+                                            <td>supervisor@company.com</td>
+                                            <td>Supervisor</td>
+                                            <td><span class="status-badge status-success">Aktif</span></td>
+                                            <td><button class="btn">Edit</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button class="btn btn-primary" style="margin-top: 16px;">Tambah User Baru</button>
+                            </div>
+                            
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Tambah User Baru</h4>
+                                <div class="form-group">
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-input" placeholder="Masukkan nama lengkap">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-input" placeholder="user@company.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role/Posisi</label>
+                                    <select class="form-select">
+                                        <option>Administrator</option>
+                                        <option>Supervisor</option>
+                                        <option>Operator</option>
+                                        <option>Viewer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Departemen</label>
+                                    <select class="form-select">
+                                        <option>Engineering</option>
+                                        <option>Quality Control</option>
+                                        <option>Maintenance</option>
+                                        <option>Management</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-success">Buat User</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pengaturan-system" class="tab-content">
+                        <div class="card-title">Pengaturan Sistem</div>
+                        
+                        <div class="grid grid-2">
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Konfigurasi Umum</h4>
+                                <div class="form-group">
+                                    <label class="form-label">Nama Perusahaan</label>
+                                    <input type="text" class="form-input" value="PT. Engineering Solutions">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Alamat</label>
+                                    <textarea class="form-input" rows="3">Jl. Sudirman No. 123, Jakarta 12345</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Timezone</label>
+                                    <select class="form-select">
+                                        <option>Asia/Jakarta (WIB)</option>
+                                        <option>Asia/Makassar (WITA)</option>
+                                        <option>Asia/Jayapura (WIT)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Format Tanggal</label>
+                                    <select class="form-select">
+                                        <option>DD/MM/YYYY</option>
+                                        <option>MM/DD/YYYY</option>
+                                        <option>YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Notifikasi & Email</h4>
+                                <div class="form-group">
+                                    <label class="form-label">SMTP Server</label>
+                                    <input type="text" class="form-input" placeholder="smtp.gmail.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">SMTP Port</label>
+                                    <input type="number" class="form-input" value="587">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email Sender</label>
+                                    <input type="email" class="form-input" placeholder="system@company.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Notifikasi Otomatis</label>
+                                    <select class="form-select">
+                                        <option>Semua Notifikasi</option>
+                                        <option>Hanya Alert Penting</option>
+                                        <option>Tidak Aktif</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-success">Simpan Pengaturan</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pengaturan-backup" class="tab-content">
+                        <div class="card-title">Backup & Restore Data</div>
+                        
+                        <div class="grid grid-2">
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Backup Data</h4>
+                                <div class="form-group">
+                                    <label class="form-label">Jenis Backup</label>
+                                    <select class="form-select">
+                                        <option>Full Backup (Semua Data)</option>
+                                        <option>Data Kalibrasi Only</option>
+                                        <option>Data Validasi Only</option>
+                                        <option>Konfigurasi System Only</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Periode Data</label>
+                                    <div class="grid grid-2">
+                                        <input type="date" class="form-input">
+                                        <input type="date" class="form-input">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Format Backup</label>
+                                    <select class="form-select">
+                                        <option>Database Export (.sql)</option>
+                                        <option>Excel Export (.xlsx)</option>
+                                        <option>JSON Export (.json)</option>
+                                        <option>Compressed Archive (.zip)</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary">Mulai Backup</button>
+                                
+                                <div class="info-box" style="margin-top: 24px;">
+                                    <h4>Backup Otomatis</h4>
+                                    <p>Backup otomatis berjalan setiap hari pada pukul 02:00 WIB. File backup disimpan selama 30 hari.</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 style="margin-bottom: 16px;">Restore Data</h4>
+                                <div class="form-group">
+                                    <label class="form-label">File Backup</label>
+                                    <input type="file" class="form-input" accept=".sql,.zip,.json">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Mode Restore</label>
+                                    <select class="form-select">
+                                        <option>Replace All Data</option>
+                                        <option>Merge with Existing</option>
+                                        <option>Restore Specific Tables</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary">Upload & Restore</button>
+                                
+                                <div class="warning-box" style="margin-top: 24px;">
+                                    <h4>Peringatan</h4>
+                                    <p>Proses restore akan mengganti data yang ada. Pastikan Anda sudah membuat backup sebelum melakukan restore.</p>
+                                </div>
+
+                                <h4 style="margin: 24px 0 16px;">Riwayat Backup</h4>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Ukuran</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2024-01-15 02:00</td>
+                                            <td>2.4 MB</td>
+                                            <td><span class="status-badge status-success">Sukses</span></td>
+                                            <td><button class="btn">Download</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2024-01-14 02:00</td>
+                                            <td>2.3 MB</td>
+                                            <td><span class="status-badge status-success">Sukses</span></td>
+                                            <td><button class="btn">Download</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Panduan -->
+            <div id="panduan" class="page">
+                <div class="header">
+                    <h1>Panduan Lengkap</h1>
+                    <p>Dokumentasi kalibrasi, troubleshooting, dan best practices</p>
+                </div>
+
+                <div class="grid grid-3">
+                    <div class="card">
+                        <h3 style="margin-bottom: 16px; color: #4f46e5;">Panduan Kalibrasi</h3>
+                        <p style="margin-bottom: 16px; color: #64748b;">Langkah-langkah detail untuk melakukan kalibrasi IRIMETER-2 sesuai standar SNI.</p>
+                        <button class="btn btn-primary">Baca Panduan</button>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin-bottom: 16px; color: #059669;">Panduan Validasi</h3>
+                        <p style="margin-bottom: 16px; color: #64748b;">Prosedur validasi hasil kalibrasi dan verifikasi akurasi alat.</p>
+                        <button class="btn btn-success">Baca Panduan</button>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin-bottom: 16px; color: #dc2626;">Troubleshooting</h3>
+                        <p style="margin-bottom: 16px; color: #64748b;">Solusi untuk masalah umum dan error yang sering terjadi.</p>
+                        <button class="btn">Baca Panduan</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Dokumentasi Teknis</div>
+                    
+                    <div class="tabs">
+                        <div class="tab-list">
+                            <button class="tab-button active" onclick="showTab('panduan', 'calibration')">Kalibrasi</button>
+                            <button class="tab-button" onclick="showTab('panduan', 'validation')">Validasi</button>
+                            <button class="tab-button" onclick="showTab('panduan', 'maintenance')">Maintenance</button>
+                            <button class="tab-button" onclick="showTab('panduan', 'troubleshoot')">Troubleshooting</button>
+                        </div>
+                    </div>
+
+                    <div id="panduan-calibration" class="tab-content active">
+                        <h4 style="margin-bottom: 16px;">Prosedur Kalibrasi IRIMETER-2</h4>
+                        
+                        <div class="info-box">
+                            <h4>Persiapan Kalibrasi</h4>
+                            <p>Pastikan alat referensi sudah terkalibrasi dan kondisi lingkungan sesuai standar sebelum memulai proses kalibrasi.</p>
+                        </div>
+
+                        <div style="margin: 24px 0;">
+                            <h5 style="margin-bottom: 12px;">Langkah-langkah Kalibrasi:</h5>
+                            <ol style="padding-left: 20px; color: #374151;">
+                                <li style="margin: 8px 0;"><strong>Persiapan Alat:</strong> Periksa kondisi IRIMETER-2 dan alat referensi</li>
+                                <li style="margin: 8px 0;"><strong>Setting Lokasi:</strong> Pilih ruas jalan dengan variasi roughness yang representatif</li>
+                                <li style="margin: 8px 0;"><strong>Pengukuran Simultan:</strong> Lakukan pengukuran bersamaan dengan alat referensi</li>
+                                <li style="margin: 8px 0;"><strong>Analisis Data:</strong> Buat persamaan regresi y = Ax + B</li>
+                                <li style="margin: 8px 0;"><strong>Input Kalibrasi:</strong> Masukkan nilai A dan B baru ke IRIMETER-2</li>
+                                <li style="margin: 8px 0;"><strong>Verifikasi:</strong> Lakukan pengukuran ulang untuk memastikan akurasi</li>
+                            </ol>
+                        </div>
+
+                        <div class="warning-box">
+                            <h4>Persyaratan SNI</h4>
+                            <p>• Gradien (A): 0.95 ≤ A ≤ 1.05<br>
+                            • Intersep (B): -0.25 ≤ B ≤ 0.25<br>
+                            • Koefisien Korelasi (R²): R² ≥ 0.95<br>
+                            • Minimum 30 titik pengukuran</p>
+                        </div>
+                    </div>
+
+                    <div id="panduan-validation" class="tab-content">
+                        <h4 style="margin-bottom: 16px;">Prosedur Validasi</h4>
+                        
+                        <div style="margin: 24px 0;">
+                            <h5 style="margin-bottom: 12px;">Tahapan Validasi:</h5>
+                            <ol style="padding-left: 20px; color: #374151;">
+                                <li style="margin: 8px 0;"><strong>Uji Lapangan:</strong> Pengukuran di kondisi operasional normal</li>
+                                <li style="margin: 8px 0;"><strong>Analisis Statistik:</strong> Perhitungan korelasi dan akurasi</li>
+                                <li style="margin: 8px 0;"><strong>Evaluasi Hasil:</strong> Bandingkan dengan toleransi yang ditetapkan</li>
+                                <li style="margin: 8px 0;"><strong>Dokumentasi:</strong> Buat laporan validasi lengkap</li>
+                            </ol>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>Kriteria Validasi</h4>
+                            <p>Validasi dianggap berhasil jika nilai R² ≥ 0.95 dan deviasi maksimal ±5% dari nilai referensi.</p>
+                        </div>
+                    </div>
+
+                    <div id="panduan-maintenance" class="tab-content">
+                        <h4 style="margin-bottom: 16px;">Panduan Maintenance</h4>
+                        
+                        <div style="margin: 24px 0;">
+                            <h5 style="margin-bottom: 12px;">Maintenance Rutin:</h5>
+                            <ul style="padding-left: 20px; color: #374151;">
+                                <li style="margin: 8px 0;"><strong>Harian:</strong> Pembersihan sensor dan kalibrasi zero</li>
+                                <li style="margin: 8px 0;"><strong>Mingguan:</strong> Periksa kondisi kabel dan koneksi</li>
+                                <li style="margin: 8px 0;"><strong>Bulanan:</strong> Kalibrasi dengan alat referensi</li>
+                                <li style="margin: 8px 0;"><strong>Tahunan:</strong> Overhaul lengkap dan sertifikasi</li>
+                            </ul>
+                        </div>
+
+                        <div class="warning-box">
+                            <h4>Catatan Penting</h4>
+                            <p>Selalu dokumentasikan semua kegiatan maintenance dalam logbook untuk traceability dan audit.</p>
+                        </div>
+                    </div>
+
+                    <div id="panduan-troubleshoot" class="tab-content">
+                        <h4 style="margin-bottom: 16px;">Troubleshooting Guide</h4>
+                        
+                        <div style="margin: 24px 0;">
+                            <h5 style="margin-bottom: 12px;">Masalah Umum dan Solusi:</h5>
+                            
+                            <div style="margin: 16px 0; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                                <h6 style="color: #dc2626; margin-bottom: 8px;">Problem: R² < 0.95</h6>
+                                <p style="margin: 4px 0; font-size: 0.875rem;"><strong>Cause:</strong> Data tidak sinkron atau kondisi pengukuran tidak konsisten</p>
+                                <p style="margin: 4px 0; font-size: 0.875rem;"><strong>Solution:</strong> Periksa sinkronisasi waktu, tambah jumlah titik data, pastikan kondisi cuaca stabil</p>
+                            </div>
+
+                            <div style="margin: 16px 0; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                                <h6 style="color: #dc2626; margin-bottom: 8px;">Problem: Gradien di luar rentang SNI</h6>
+                                <p style="margin: 4px 0; font-size: 0.875rem;"><strong>Cause:</strong> Drift sensor atau kalibrasi alat referensi bermasalah</p>
+                                <p style="margin: 4px 0; font-size: 0.875rem;"><strong>Solution:</strong> Kalibrasi ulang alat referensi, periksa kondisi sensor, ulangi pengukuran</p>
+                            </div>
+
+                            <div style="margin: 16px 0; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                                <h6 style="color: #dc2626; margin-bottom: 8px;">Problem: Data tidak stabil</h6>
+                                <p style="margin: 4px 0; font-size: 0.875rem;"><strong>Cause:</strong> Gangguan elektromagnetik atau getaran kendaraan</p>
+                                <p style="margin: 4px 0; font-size: 0.875rem;"><strong>Solution:</strong> Periksa grounding, gunakan kecepatan konstan, hindari area dengan interferensi tinggi</p>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>Kontak Support</h4>
+                            <p>Untuk masalah yang tidak dapat diselesaikan, hubungi tim support teknis:<br>
+                            Email: hary.styaji@gmail.com<br>
+                            Phone & WhatsApp: +62-812-36860334<br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation Functions
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showTab(pageId, tabId) {
+            document.querySelectorAll(`#${pageId} .tab-content`).forEach(content => content.classList.remove('active'));
+            document.querySelectorAll(`#${pageId} .tab-button`).forEach(button => button.classList.remove('active'));
+            document.getElementById(`${pageId}-${tabId}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Calibration Calculator Functions
+        function getInputValue(id) {
+            const element = document.getElementById(id);
+            const value = element ? element.value.trim() : '';
+            return value === '' ? null : parseFloat(value);
+        }
+
+        function calculateStrategy(a_old, b_old, target_a, target_b) {
+            return {
+                A_input: target_a / a_old,
+                B_input: target_b - (b_old * target_a / a_old)
+            };
+        }
+
+        function createResultContent(sensor, data, isCalibrationOK, A_new_recommended, B_new_recommended, a_result, b_result) {
+            if (isCalibrationOK) {
+                return `
+                    <div class="status-badge status-success" style="margin-bottom: 16px;">Kalibrasi Sudah Sesuai SNI</div>
+                    <p style="margin-bottom: 16px; color: #374151; font-size: 0.875rem;">
+                        Persamaan running sudah memenuhi semua persyaratan. Tidak perlu mengubah nilai A dan B di IRIMETER-2.
+                    </p>
+                    <div style="margin: 16px 0;">
+                        ${[
+                            ['Gradien (A)', data.gradien.toFixed(4)],
+                            ['Intersep (B)', data.intersep.toFixed(4)],
+                            ['R² Value', data.r.toFixed(4)]
+                        ].map(([label, value]) => 
+                            `<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                                <span style="font-size: 0.875rem; color: #64748b; font-weight: 500;">${label}</span>
+                                <span style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;">${value}</span>
+                            </div>`
+                        ).join('')}
+                    </div>
+                `;
+            } else {
+                const canRecommend = A_new_recommended >= 0.1 && A_new_recommended <= 10.0 && 
+                                   B_new_recommended >= -5.0 && B_new_recommended <= 5.0 && 
+                                   a_result >= 0.95 && a_result <= 1.05 && 
+                                   b_result >= -0.25 && b_result <= 0.25 && 
+                                   data.r >= 0.95;
+                
+                if (canRecommend) {
+                    return `
+                        <div class="status-badge status-success" style="margin-bottom: 16px;">Rekomendasi Input Tersedia</div>
+                        <div style="margin: 16px 0;">
+                            ${[
+                                ['A_new (Input ke alat)', A_new_recommended.toFixed(4)],
+                                ['B_new (Input ke alat)', B_new_recommended.toFixed(4)]
+                            ].map(([label, value]) => 
+                                `<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <span style="font-size: 0.875rem; color: #64748b; font-weight: 500;">${label}</span>
+                                    <span style="font-family: monospace; font-size: 0.875rem; font-weight: 600; color: #1e293b;">${value}</span>
+                                </div>`
+                            ).join('')}
+                        </div>
+                        <div style="margin: 16px 0; padding: 12px; background: #f0f9ff; border-radius: 8px; font-size: 0.875rem;">
+                            <div style="color: #0369a1; margin-bottom: 8px;"><strong>Perhitungan:</strong></div>
+                            <div style="color: #64748b;">A_new = 1.00 ÷ ${data.gradien.toFixed(4)} = ${A_new_recommended.toFixed(4)}</div>
+                            <div style="color: #64748b;">B_new = -${data.intersep.toFixed(4)} ÷ ${data.gradien.toFixed(4)} = ${B_new_recommended.toFixed(4)}</div>
+                            <div style="color: #0369a1; margin-top: 8px;"><strong>Hasil: a = ${a_result.toFixed(3)}, b = ${b_result.toFixed(3)}</strong></div>
+                        </div>
+                        <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px; margin-top: 16px;">
+                            <div style="color: #0369a1; margin-bottom: 12px; font-weight: 600; font-size: 0.875rem;">Langkah Input ke IRIMETER-2</div>
+                            <ol style="margin: 0; padding-left: 20px; color: #0369a1; font-size: 0.875rem;">
+                                <li style="margin: 4px 0;">Buka menu kalibrasi sensor ${sensor === 'left' ? 'kiri' : 'kanan'}</li>
+                                <li style="margin: 4px 0;">Input A = ${A_new_recommended.toFixed(4)}</li>
+                                <li style="margin: 4px 0;">Input B = ${B_new_recommended.toFixed(4)}</li>
+                                <li style="margin: 4px 0;">Simpan dan restart IRIMETER-2</li>
+                                <li style="margin: 4px 0;">Verifikasi hasil sesuai target SNI</li>
+                            </ol>
+                        </div>
+                    `;
+                } else {
+                    const issues = [];
+                    if (data.r < 0.95) issues.push(`R² = ${data.r.toFixed(4)} (< 0.95)`);
+                    if (A_new_recommended < 0.1 || A_new_recommended > 10.0) issues.push(`A_new = ${A_new_recommended.toFixed(3)} (di luar batas alat)`);
+                    if (B_new_recommended < -5.0 || B_new_recommended > 5.0) issues.push(`B_new = ${B_new_recommended.toFixed(3)} (di luar batas alat)`);
+                    
+                    return `
+                        <div class="status-badge status-error" style="margin-bottom: 16px;">Kalibrasi Bermasalah</div>
+                        <p style="margin-bottom: 16px; color: #991b1b; font-size: 0.875rem;">
+                            Persamaan running tidak dapat menghasilkan nilai SNI yang valid.
+                        </p>
+                        <div style="padding: 16px; background: #fee2e2; border-radius: 8px; border: 1px solid #fecaca;">
+                            <div style="font-weight: 600; color: #dc2626; margin-bottom: 8px; font-size: 0.875rem;">Masalah Terdeteksi:</div>
+                            <ul style="margin: 0; padding-left: 16px; font-size: 0.8rem; color: #7f1d1d;">
+                                ${issues.map(issue => `<li>${issue}</li>`).join('')}
+                            </ul>
+                            <div style="margin-top: 12px; font-size: 0.8rem; color: #991b1b; font-weight: 600;">
+                                Solusi: Perbaiki persamaan running dengan target gradien ≈ 1.00, intersep ≈ 0.00, R² ≥ 0.95
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function calculateCalibration() {
+            const data = {
+                left: {
+                    gradien: getInputValue('gradien_left'),
+                    intersep: getInputValue('intersep_left'),
+                    r: getInputValue('r_left'),
+                    a: getInputValue('a_old_left'),
+                    b: getInputValue('b_old_left')
+                },
+                right: {
+                    gradien: getInputValue('gradien_right'),
+                    intersep: getInputValue('intersep_right'),
+                    r: getInputValue('r_right'),
+                    a: getInputValue('a_old_right'),
+                    b: getInputValue('b_old_right')
+                }
+            };
+
+            // Validation
+            for (let sensor in data) {
+                const d = data[sensor];
+                const sensorName = sensor === 'left' ? 'Kiri' : 'Kanan';
+                
+                if (Object.values(d).some(v => v === null)) {
+                    alert(`Mohon lengkapi semua field untuk Sensor ${sensorName}!`);
+                    return;
+                }
+                
+                if (Object.values(d).some(v => isNaN(v))) {
+                    alert(`Nilai tidak valid terdeteksi pada Sensor ${sensorName}!`);
+                    return;
+                }
+            }
+
+            let bothCalibrationOK = true;
+
+            // Process each sensor
+            ['left', 'right'].forEach(sensor => {
+                const d = data[sensor];
+                const isCalibrationOK = d.gradien >= 0.95 && d.gradien <= 1.05 && 
+                                       d.intersep >= -0.25 && d.intersep <= 0.25 && 
+                                       d.r >= 0.95;
+                
+                if (!isCalibrationOK) bothCalibrationOK = false;
+                
+                // Calculate recommendations
+                const A_new = 1.00 / d.gradien;
+                const B_new = -d.intersep / d.gradien;
+                const a_result = A_new * d.gradien;
+                const b_result = B_new * d.gradien + d.intersep;
+                
+                // Update result content
+                document.getElementById(`result-${sensor}-content`).innerHTML = createResultContent(
+                    sensor, d, isCalibrationOK, A_new, B_new, a_result, b_result
+                );
+
+                // Calculate alternatives
+                [
+                    { target_a: 0.95, target_b: -0.25, prefix: 'low' },
+                    { target_a: isCalibrationOK ? d.gradien : 1.00, target_b: isCalibrationOK ? d.intersep : 0.00, prefix: 'mid' },
+                    { target_a: 1.05, target_b: 0.25, prefix: 'high' }
+                ].forEach(strategy => {
+                    const result = calculateStrategy(d.a, d.b, strategy.target_a, strategy.target_b);
+                    document.getElementById(`${strategy.prefix}_a_${sensor}`).textContent = result.A_input.toFixed(4);
+                    document.getElementById(`${strategy.prefix}_b_${sensor}`).textContent = result.B_input.toFixed(4);
+                    
+                    if (strategy.prefix === 'mid' && isCalibrationOK) {
+                        const targetElement = document.getElementById(`mid_target_${sensor}`);
+                        if (targetElement) {
+                            targetElement.textContent = `Target: a=${d.gradien.toFixed(2)}, b=${d.intersep.toFixed(2)} (Persamaan Running)`;
+                        }
+                    }
+                });
+            });
+
+            // Show/hide sections
+            document.getElementById('improvement-guide').style.display = bothCalibrationOK ? 'none' : 'block';
+            document.getElementById('calibration-results').style.display = 'block';
+            
+            // Scroll to results
+            setTimeout(() => {
+                document.getElementById('calibration-results').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        }
+
+        function resetCalibrationData() {
+            if (confirm('Apakah Anda yakin ingin mengosongkan semua data input?')) {
+                ['gradien_left', 'intersep_left', 'r_left', 'a_old_left', 'b_old_left',
+                 'gradien_right', 'intersep_right', 'r_right', 'a_old_right', 'b_old_right'].forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.value = '';
+                });
+                
+                document.getElementById('calibration-results').style.display = 'none';
+                document.getElementById('improvement-guide').style.display = 'none';
+                document.getElementById('gradien_left').focus();
+            }
+        }
+
+        function exportCalibrationResults() {
+            const resultsVisible = document.getElementById('calibration-results').style.display !== 'none';
+            if (!resultsVisible) {
+                alert('Lakukan perhitungan kalibrasi terlebih dahulu sebelum export.');
+                return;
+            }
+            alert('Fitur export hasil kalibrasi akan segera tersedia.');
+        }
+
+        // Demo functions for other pages
+        function generateReport() {
+            alert('Fitur generate laporan akan segera diimplementasi');
+        }
+
+        function startValidation() {
+            alert('Fitur validasi otomatis akan segera diimplementasi');
+        }
+
+        function saveSettings() {
+            alert('Pengaturan berhasil disimpan');
+        }
+
+        function createBackup() {
+            alert('Proses backup dimulai. Anda akan mendapat notifikasi setelah selesai.');
+        }
+
+        // Input validation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.form-input[type="number"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = this.value && !isNaN(this.value) ? '#10b981' : '#d1d5db';
+                });
+                
+                input.addEventListener('focus', function() {
+                    this.style.transform = 'translateY(-1px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.transform = '';
+                });
+            });
+            
+            // Auto-focus first input
+            const firstInput = document.getElementById('gradien_left');
+            if (firstInput) firstInput.focus();
+        });
+    </script>
+</body>
+</html>
